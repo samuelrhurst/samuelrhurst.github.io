@@ -1,14 +1,16 @@
 ---
-title: "Basic Git and GitHub Setup and Configuration"
+title: "Git and GitHub Setup Basics"
 date: 2025-11-02T07:57:29+11:00
 ---
 
-# Configuring Git and GitHub
+Introduction paragraph.
 
-## Installing Git on Your Laptop / Cloud Dev Space (if not already installed)
+## Installing Git (if not already installed)
+
+### Linux
 
 ### Windows
-To install Git on a Windows device, you can either download the installer from the [Git Project](https://git-scm.com/install/windows) (or follow your companies software provisioning process if you are on a locked down corporate device), or better yet, use the Windows Package Manager (aka [WinGet](https://github.com/microsoft/winget-cli)). To install using winget, open the ‘Command Prompt’ app from the Start Menu (or better yet, open [Microsoft’s Terminal App](https://github.com/microsoft/terminal)), and run the following command:
+To install Git on a Windows device, you can download the installer from the [Git Project](https://git-scm.com/install/windows) (or if you are on a locked down corporate device, follow your company's software provisioning process). However, cool kids like us will use the Windows Package Manager (aka [WinGet](https://github.com/microsoft/winget-cli)) instead. To install git using winget, open the ‘Command Prompt’ app from the Start Menu (or better yet, open [Microsoft’s Terminal App](https://github.com/microsoft/terminal)), and run the following command:
 
 ```batch
 Microsoft Windows [Version 10.0.19045.6332]
@@ -30,9 +32,9 @@ You will now have the following apps installed on your device:
 * Git Bash
 * Git GUI
 
-### Linux (i.e. Most Cloud Dev Spaces)
+## Basic Git Config Settings
 
-# Setting user.email
+### Setting user.email
 
 In GitHub:
 
@@ -40,7 +42,7 @@ In GitHub:
 2. From the left hand sidebar in the settings page, click 'Emails'.
 3. The top of the Emails page, there will be the following text:
 
-> Emails you can use to sign in to your account. Your emails will not be used as the 'from' address for web-based Git operations, e.g. edits and merges. All web-based Git operations will be linked to <random_numbers>+<your_github_username>@users.noreply.github.com.
+> Emails you can use to sign in to your account. Your emails will not be used as the 'from' address for web-based Git operations, e.g. edits and merges. All web-based Git operations will be linked to __<random_numbers>+<your_github_username>@users.noreply.github.com__.
 
 4. Copy and paste this <random_numbers>+<your_github_username>@users.noreply.github.com address somewhere; this it the address you should configure the git software with, as when GitHub is displaying all the commits that have been made to the repo, the commits made by this e-mail address are the commits it will attribute to your GitHub account.
 
@@ -48,7 +50,7 @@ In GitHub:
 git config --global user.email <random_numbers>+<your_github_username>@users.noreply.github.com
 ```
 
-# Storing Your GitHub Credentials (securely)
+## Managing Your GitHub Credentials (securely)
 
 Without providing git with your GitHub credentials, you won't be able to complete the most basic preqrequsitie of getting your work done; cloning your project repo to your development space. There are lots of ways to handle this, but let's focus in on an approach that doesn't require insecurely hardcoding your passwords somewhere, and doesn't require you to keep entering your password over and over again. Enter the (Git Credential Manager)[https://github.com/git-ecosystem/git-credential-manager]!
 
@@ -57,7 +59,7 @@ Some of the credential store backends that can be use by GCM are:
 * macOS Keychain
 * Linux's [pass](https://www.passwordstore.org/) program
 
-## Installing Git Credential Manager
+### Installing Git Credential Manager
 
 If you installed Git for Windows, there is a very good chance that Git Credential Manager is already installed. If you want to check, run the following command:
 
@@ -77,7 +79,7 @@ If you are on Linux and you need to install it, the best option is probably the 
 curl -L https://aka.ms/gcm/linux-install-source.sh | sh
 ```
 
-## Configuring Git to Use GCM
+### Configuring Git to Use GCM
 
 ```bash
 git config --global credential.helper manager
@@ -89,22 +91,27 @@ On Windows, the credential store backend doesn't need to be explicitly set (it w
 git config --global credential.credentialStore wincredman
 ```
 
-## Using GCM
+### Using GCM
 
 This is the really easy bit; just use git as you normally would. There's no need to ever interact with the Git Credential Manager after it's been setup, git will call GCM on your behalf when it needs to. The first time you need to clone a private repo, or push changes to a repo, you will be prompted for your GitHub credentials. On Windows, you will get a dialog pop box that looks like this:
 
-![Alt text](gcm-win-github-login-dialog-box.png "Optional Title")
+{{< figure src="gcm-win-github-login-dialog-box.png" alt="Example" width="315" >}}
 
 If you choose the 'Sign in with your browser' option, you will be asked to sign into the GitHub website with your username and password, and after succesfully doing this GitHub will generate and provide the tool with an OAuth token to use for future logins (well, technically it will provide two tokens; a short lived access token for actually doing 'GitHub things' with, and then another more long lived refresh token to generate a new access token everytime it expires). OAuth is good option, but I tend to always use the 'Personal Access Token' option, which is what the token option in the dialog box is referring to. If you don't already have a GitHub PAT, you can generate one from your web browser: GitHub -> Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens or Tokens (classic) -> Generate new token.
 
-On Windows, if you ever need to manage the credentials stored in the Windows Credential Store, you can use the [cmd](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/cmdkey) command.
+On Windows, if you ever need to manage the credentials stored in the Windows Credential Store, you can use the [cmd](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/cmdkey) command:
 
 ```batch
 cmdkey /list
 ```
 
+If you ever need to delete a credential from the Windows credential store, use the /delete command with the target you found using the /list command:
 
-# Finally, Cloning Your Repo and Getting on with your Work
+```batch
+cmdkey /delete:LegacyGeneric:target=git:https://github.com
+```
+
+## Cloning Your Repo and Getting on with your Work
 
 ```bash
 git clone --branch <branch-name> --single-branch --depth 1 <repo-url>
