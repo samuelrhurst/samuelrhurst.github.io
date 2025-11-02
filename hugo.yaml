@@ -19,7 +19,7 @@ markup:
 menu:
   main:
     - name: Posts
-      pageRef: /blog
+      pageRef: /posts
       weight: 1
     - name: About
       pageRef: /about
@@ -50,3 +50,5 @@ params:
 
   editURL:
     enable: false
+
+buildFuture: true

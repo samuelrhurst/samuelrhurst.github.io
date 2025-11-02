@@ -6,9 +6,9 @@ tags: ['podcast', 'sqlfluff']
 
 <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="175" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.podcasts.apple.com/au/podcast/keep-your-analytics-lint-free-with-sqlfluff/id981834425?i=1000524721593"></iframe>
 
-Keeping a team's SQL codebase tidy and maintainable can be challenging. A decent code linter is an essential tool in this regard, but SQL developers aren't exactly spoiled for choice. SQL has some unique linting challenges, which perhaps explains the small number of linter options available for it.
+Keeping your team's SQL codebase tidy and maintainable can be challenging. A decent code linter is an essential tool in this regard, but SQL developers aren't exactly spoiled for choice. SQL has some unique linting challenges, which perhaps explains the small number of linter options available for it. If you want to learn more about the best SQL linter (in my opinion), [SQLFluff](https://www.sqlfluff.com/), have a listen to this interview with the project's creator and maintainer, Alan Cruickshank.
 
-If you want to learn more about the best SQL linter (in my opinion), [SQLFluff](https://www.sqlfluff.com/), have a listen to this interview with the project's creator and maintainer, Alan Cruickshank. Alan talks about the problems in his workplace he was trying to solve with this tool, the challenge of dealing with the non-standardisation of SQL and the large number of SQL dialects, and the buy-in from the DBT community his project received by tackling the problem of linting heavily parameterised SQL.
+Alan talks about the problems in his workplace he was trying to solve with this tool, the challenge of dealing with the non-standardisation of SQL and the large number of SQL dialects, and the buy-in from the DBT community his project received by tackling the problem of linting heavily parameterised SQL.
 
 Here are some of Alan's comments on the challenge of linting parameterised SQL:
 
