@@ -1,6 +1,6 @@
 ---
 title: "Recommended Podcast: Interview with SQLFluff Creator, Alan Cruickshank"
-date: 2025-11-03
+date: 2025-11-02
 tags: ['podcast', 'sqlfluff']
 ---
 

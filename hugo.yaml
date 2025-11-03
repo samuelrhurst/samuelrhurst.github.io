@@ -43,6 +43,8 @@ params:
   navbar:
     displayTitle: true
     displayLogo: true
+    logo:
+      path: images/logo.png
 
   footer:
     displayCopyright: false
