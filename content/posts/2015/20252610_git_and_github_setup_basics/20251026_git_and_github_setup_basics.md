@@ -1,6 +1,6 @@
 ---
 title: "Git and GitHub Setup Basics"
-date: 2025-11-02T07:57:29+11:00
+date: 2025-10-26
 ---
 
 Introduction paragraph.

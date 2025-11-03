@@ -8,10 +8,19 @@ This is the landing page.
 ## Explore
 
 {{< cards >}}
-  {{< card link="docs" title="Docs" icon="book-open" >}}
+  {{< card link="posts" title="Posts" icon="book-open" >}}
   {{< card link="about" title="About" icon="user" >}}
 {{< /cards >}}
 
-## Documentation
+## Contact
 
-For more information, visit [Hextra](https://imfing.github.io/hextra).
+To contact me professionally, get in touch via LinkedIn:
+
+{{< cards >}}
+    {{< card 
+        link="https://www.linkedin.com/in/samuelrhurst" 
+        title="LinkedIn" 
+        icon="linkedin" 
+        color="blue" 
+    >}}
+{{< /cards >}}
