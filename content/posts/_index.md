@@ -1,5 +1,5 @@
 ---
 title: "Posts"
-type: "posts"
-layout: "list"
+cascade:
+  type: blog
 ---
