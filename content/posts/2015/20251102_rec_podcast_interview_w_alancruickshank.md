@@ -35,5 +35,5 @@ If you want to follow Alan Cruickshank, he can be found on [LinkedIn](https://ww
 Link to the Podcast Episode:
 
 {{< cards cols="1" >}}
-  {{< card link="https://www.pythonpodcast.com/sqlfluff-sql-linter-episode-318" title="Podcast.\_\_init\_\_ - Keep Your Analytics Lint Free With SQLFluff" >}}
+  {{< card link="https://www.pythonpodcast.com/sqlfluff-sql-linter-episode-318" title="Podcast.__init__ - Keep Your Analytics Lint Free With SQLFluff" >}}
 {{< /cards >}}
