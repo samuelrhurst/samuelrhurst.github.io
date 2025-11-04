@@ -5,6 +5,8 @@ type: about
 
 I'm a Data Professional living and working in Melbourne Australia. If something catches my eye, and is too good not to share, I'll post about it here. I also write about my side projects, post how-to articles, and share my thoughts on tech and data topics.
 
+This blog is written in Markdown using [Hugo](https://gohugo.io/) and [Hextra](https://imfing.github.io/hextra/), built with [GitHub Actions](https://github.com/features/actions), and hosted on [GitHub Pages](https://docs.github.com/en/pages). If you want to look at the blog's underlying source code, my code repo can be found [here](https://github.com/samuelrhurst/samuelrhurst.github.io).
+
 ## Contact
 
 To contact me professionally, get in touch via LinkedIn:
