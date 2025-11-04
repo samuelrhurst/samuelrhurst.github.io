@@ -1,6 +1,8 @@
 ---
 title: "Git and GitHub Setup Basics"
 date: 2025-10-26
+draft: true
+tags: ['howto', 'git', 'github']
 ---
 
 Introduction paragraph.

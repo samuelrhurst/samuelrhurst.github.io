@@ -1,7 +1,7 @@
 ---
 title: "Recommended Podcast: Interview with SQLFluff Creator, Alan Cruickshank"
 date: 2025-11-02
-tags: ['podcast', 'sqlfluff']
+tags: ['podcasts', 'sqlfluff', 'sql']
 ---
 
 <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="175" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.podcasts.apple.com/au/podcast/keep-your-analytics-lint-free-with-sqlfluff/id981834425?i=1000524721593"></iframe>

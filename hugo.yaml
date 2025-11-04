@@ -46,6 +46,12 @@ params:
     logo:
       path: images/logo.png
 
+  blog:
+    list:
+      displayTags: true
+  toc:
+    displayTags: true
+
   footer:
     displayCopyright: false
     displayPoweredBy: true
@@ -54,3 +60,5 @@ params:
     enable: false
 
 buildFuture: true
+
+enableEmoji: true
