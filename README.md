@@ -1,5 +1,7 @@
 # Sam Hurst's Blog
 
+Rendered Blog Site: https://samuelrhurst.github.io/
+
 ## Hugo Static Site Generator
 
 This blog uses [Hugo](https://github.com/gohugoio/hugo), a popular open-source static site generator written in Go, to turn the markdown posts placed in the `/content` dir into a static html website, ready to be served.
