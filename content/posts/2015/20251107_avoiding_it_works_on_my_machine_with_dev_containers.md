@@ -205,4 +205,4 @@ Just remember, a dev containers is 'ephemeral'; you create it, do some work in i
 
 __To-Do: Details about remote execution.__
 
-[^1]: The homebrew package manager is not a built-in component of Mac OS, and will need to be installed before using any `brew` commands. Installation instructions can be found at [brew.sh](https://brew.sh/), but basically involves downloading and running an installation script like this: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+[^1]: The homebrew package manager is not a built-in component of MacOS, and will need to be installed before using any `brew` commands. Installation instructions can be found at [brew.sh](https://brew.sh/), but basically involves downloading and running an installation script like this: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
