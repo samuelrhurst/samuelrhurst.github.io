@@ -150,7 +150,7 @@ SUCCESS: Specified value was saved.
 
 ### Generating Key
 
-Start the key generation wizard by running the `gpg --full-generate-key` command, and then make the following selections:
+By default, git will look for a key using the same e-mail address that was set as user.email in the git config, so make sure when entering the e-mail address in the key generation wizard, you use the same one. Start the key generation wizard by running the `gpg --full-generate-key` command, and then make the following selections:
 
 * Please select what kind of key you want: ECC (sign and encrypt)
 * Please select which elliptic curve you want: Curve 25519
@@ -178,9 +178,17 @@ Then in GitHub:
 
 ### Telling git to sign your commits
 
+To tell git to automatically sign any commits or tags you create, set the following two git config options:
+
 ```bash
 git config --global commit.gpgSign true
 git config --global tag.gpgSign true
+```
+
+VS Code will use the `-c user.useConfigOnly=true` option when making commits, so you must set the `user.signingkey` git config. You can get the identifier for the key by running `gpg --list-secret-keys --keyid-format=long "<random_numbers>+<your_github_username>@users.noreply.github.com"`. You will be looking for the key with a __sec__ label to the left of it, and the key will be everything to the right of the `ed25529/` prefix. You can then use that id with the following git config command: `git config --global user.signingkey <value>`. Or alternatively, you can do it with a single command:
+
+```powershell {filename="Powershell"}
+git config --global user.signingkey ((gpg --list-secret-keys --keyid-format=long "<random_numbers>+<your_github_username>@users.noreply.github.com" | ForEach-Object { $_.ToString() -match '^sec\s+\S+/(\S+)' | Out-Null; $Matches[1] }) | Select-Object -First 1)
 ```
 
 ## Cloning Your Repo and Getting on with your Work
