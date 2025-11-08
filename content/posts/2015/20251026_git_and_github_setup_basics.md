@@ -14,10 +14,10 @@ If not already installed.
 ### Linux
 
 ### Windows
-To install Git on a Windows device, you can download the installer from the [Git Project](https://git-scm.com/install/windows) (or if you are on a locked down corporate device, follow your company's software provisioning process). However, cool kids like us will use the Windows Package Manager (aka [WinGet](https://github.com/microsoft/winget-cli)) instead. To install git using winget, open the ‘Windows Powershell’ app from the Start Menu (or better yet, open Powershell terminal using [Microsoft’s Terminal App](https://github.com/microsoft/terminal)), and run the following command:
+To install Git on a Windows device, you can download the installer from the [Git Project](https://git-scm.com/install/windows) (or if you are on a locked down corporate device, follow your company's software provisioning process). However, cool kids like us will use the Windows Package Manager (aka [WinGet](https://github.com/microsoft/winget-cli)) instead. To install git using winget, open the ‘Windows Powershell’ app from the Start Menu (or better yet, open a Powershell terminal using [Microsoft’s Terminal App](https://github.com/microsoft/terminal)), and run the following command:
 
 ```powershell
-PS C:\Users\sam> winget install --id Git.Git -e --source winget
+PS C:\Users\sam> winget install --id Git.Git -e
 Found Git [Git.Git] Version 2.51.2
 This application is licensed to you by its owner.
 Microsoft is not responsible for, nor does it grant any licenses to, third-party packages.
@@ -28,10 +28,8 @@ Starting package install...
 The installer will request to run as administrator. Expect a prompt.
 Successfully installed
 ```
-You will now have the following apps installed on your device:
-* Git CMD
-* Git Bash
-* Git GUI
+
+### Mac
 
 ## Basic Git Config Settings
 
@@ -49,12 +47,12 @@ In GitHub:
 2. From the left hand sidebar in the settings page, click 'Emails'.
 3. The top of the Emails page, there will be the following text:
 
-> Emails you can use to sign in to your account. Your emails will not be used as the 'from' address for web-based Git operations, e.g. edits and merges. All web-based Git operations will be linked to __<random_numbers>+<your_github_username>@users.noreply.github.com__.
+> Emails you can use to sign in to your account. Your emails will not be used as the 'from' address for web-based Git operations, e.g. edits and merges. All web-based Git operations will be linked to __<numbers+gh_username>@users.noreply.github.com__.
 
-4. This <random_numbers>+<your_gh_username>@users.noreply.github.com address is the address you should configure the git software with, as when GitHub is displaying all the commits that have been made to the repo, the commits made by this e-mail address are the commits it will attribute to your GitHub account.
+4. This <numbers+gh_username>@users.noreply.github.com address is the address you should configure Git with, as GitHub relies on matching this e-mail address to GitHub accounts when attributing commits to GitHub users.
 
 ```bash
-git config --global user.email <random_numbers>+<your_gh_username>@users.noreply.github.com
+git config --global user.email <numbers+gh_username>@users.noreply.github.com
 ```
 
 ## Managing Your GitHub Credentials (securely)
@@ -104,9 +102,11 @@ git config --global credential.credentialStore wincredman
 
 This is the really easy bit; just use git as you normally would. There's no need to ever interact with the Git Credential Manager after it's been setup; git will call GCM on your behalf when it needs to. The first time you need to clone a private repo, or push changes to a repo (i.e. an action that needs authorisation), you will be prompted for your GitHub credentials. On Windows, you will get a dialog pop box from GCM that looks like this:
 
-{{< figure src="images/20252610_git_and_github_setup_basics/gcm-win-github-login-dialog-box.png" alt="Example" width="315" >}}
+{{< figure src="/images/20252610_git_and_github_setup_basics/gcm-win-github-login-dialog-box.png" alt="Example" width="315" >}}
 
-If you choose the 'Sign in with your browser' option, you will be asked to sign into the GitHub website with your username and password, and after succesfully doing this GitHub will generate and provide GCM with an OAuth token to use for future logins (well, technically it will provide two tokens; a short lived 'access' token for actually doing 'GitHub things' with, and then another more long lived 'refresh' token to generate a replacment access token whenever it has expired). OAuth is good option, but I tend to always use the 'Personal Access Token' option, which is what the Token option in the dialog box is referring to. If you don't already have a GitHub PAT, you can generate one from GitHub in your web browser: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens or Tokens (classic) → Generate new token. Then paste this token into the Dialog box.
+If you choose the 'Sign in with your browser' option, you will be asked to sign into the GitHub website with your username and password, and after succesfully doing this GitHub will generate and provide GCM with an OAuth token to use for future logins (well, technically it will provide two tokens; a short lived 'access' token for actually doing 'GitHub things' with, and then another more long lived 'refresh' token to generate a replacement access token whenever it has expired). OAuth is good option, but I tend to always use the 'Personal Access Token' option, which is what the Token option in the dialog box is referring to.
+
+If you don't already have a GitHub PAT, you can generate one from GitHub in your web browser: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens or Tokens (classic) → Generate new token. Then paste this token into the Dialog box.
 
 On Windows, if you ever need to manage the GitHub credentials stored in the Windows Credential Store backend, you can use the [cmdkey](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/cmdkey) command with the list argument, and then look for a credential with a 'target' value that looks something like 'LegacyGeneric:target=git:https://github.com':
 
@@ -140,7 +140,7 @@ Starting package install...
 Successfully installed
 ```
 
-You should also take the opportunity to override the GNUPGHOME location (where the GPG keys will live) to be more 'linux-like', otherwise it will use a default location of %APPDATA%\gnupg, which will ultimately cause configuration headaches trying to get GPG to integrate nicely with git.
+You should also take the opportunity to override the GNUPGHOME location (where the GPG keys will live) to be more 'linux-like', otherwise it will use a default location of %APPDATA%\gnupg.
 
 ```powershell
 PS C:\Users\sam> setx GNUPGHOME "$HOME\.gnupg"
@@ -148,7 +148,7 @@ PS C:\Users\sam> setx GNUPGHOME "$HOME\.gnupg"
 SUCCESS: Specified value was saved.
 ```
 
-### Generating Key
+### Generating a GPG Key Pair
 
 By default, git will look for a key using the same e-mail address that was set as user.email in the git config, so make sure when entering the e-mail address in the key generation wizard, you use the same one. Start the key generation wizard by running the `gpg --full-generate-key` command, and then make the following selections:
 
@@ -156,15 +156,30 @@ By default, git will look for a key using the same e-mail address that was set a
 * Please select which elliptic curve you want: Curve 25519
 * Please specify how long the key should be valid: 0
 * Real name: <your name, consistent with the name section of you GitHub profile>
-* Email address: Your GitHub e-mail address i.e. <random_numbers>+<your_github_username>@users.noreply.github.com
+* Email address: Your GitHub e-mail address i.e. <numbers+gh_username>@users.noreply.github.com
 * Comment: GitHub Key
 
-### Telling GitHub about your key
+### Configuring Git to Sign Your Commits with the Private Key
 
-In the terminal, copy the public key from your newly create key pair to the clipoard:
+To tell git to automatically sign any commits or tags you create, set the following two git config options:
 
-```powershell {filename="Windows, Powershell"}
-gpg --armour --export <random_numbers>+<your_github_username>@users.noreply.github.com | Set-Clipboard
+```bash
+git config --global commit.gpgSign true
+git config --global tag.gpgSign true
+```
+
+VS Code will use the `-c user.useConfigOnly=true` option when making commits, so you must set the `user.signingkey` git config. You can get the identifier for the key by running `gpg --list-secret-keys --keyid-format=long "<numbers+gh_username>@users.noreply.github.com"`. You will be looking for the key with a __sec__ label to the left of it, and the key will be everything to the right of the `ed25529/` prefix. You can then use that id with the following git config command: `git config --global user.signingkey <keyid>`. Or alternatively, you can do it with a single command:
+
+```powershell {filename="Powershell"}
+git config --global user.signingkey ((gpg --list-secret-keys --keyid-format=long "<numbers+gh_username>@users.noreply.github.com" | ForEach-Object { $_.ToString() -match '^sec\s+\S+/(\S+)' | Out-Null; $Matches[1] }) | Select-Object -First 1)
+```
+
+### Configuring GitHub to Verify Your Commits with the Public Key
+
+The easy way to add the public GPG Key to your GitHub profile is use the terminal to copy it to the clipboard, and the paste it into relevant settings page in your web browser. To copy the key to the clibpboard:
+
+```powershell {filename="Windows Powershell"}
+gpg --armour --export <numbers+gh_username>@users.noreply.github.com | Set-Clipboard
 ```
 Then in GitHub:
 
@@ -176,20 +191,27 @@ Then in GitHub:
 6. Click Add GPG key.
 7. If prompted, authenticate to your GitHub account to confirm the action.
 
-### Telling git to sign your commits
+However, the even easier way, is to use the github CLI. If you haven't already installed it, do so like this:
 
-To tell git to automatically sign any commits or tags you create, set the following two git config options:
-
-```bash
-git config --global commit.gpgSign true
-git config --global tag.gpgSign true
+```powershell
+PS C:\Users\sam> winget install -e --id GitHub.cli
+Found GitHub CLI [GitHub.cli] Version 2.83.0
+This application is licensed to you by its owner.
+Microsoft is not responsible for, nor does it grant any licenses to, third-party packages.
+Downloading https://github.com/cli/cli/releases/download/v2.83.0/gh_2.83.0_windows_amd64.msi
+  ██████████████████████████████  17.6 MB / 17.6 MB
+Successfully verified installer hash
+Starting package install...
+Successfully installed
 ```
 
-VS Code will use the `-c user.useConfigOnly=true` option when making commits, so you must set the `user.signingkey` git config. You can get the identifier for the key by running `gpg --list-secret-keys --keyid-format=long "<random_numbers>+<your_github_username>@users.noreply.github.com"`. You will be looking for the key with a __sec__ label to the left of it, and the key will be everything to the right of the `ed25529/` prefix. You can then use that id with the following git config command: `git config --global user.signingkey <value>`. Or alternatively, you can do it with a single command:
+Then login to GitHub with the CLI tool by running `gh auth login`. Select GitHub.com if you are asked which instance of GitHub to use, and choose HTTPS if given the choice of preferred protocol. Answer 'yes' to authenticating with your GitHub credentials, and then choose 'Paste an authentication token', and paste your GitHub Personal Access Token. You might want to create a separate PAT for use with the GH CLI, as it will in general need a few extra allowed scopes beyond what you would allow a regular push/pull token to have.
 
-```powershell {filename="Powershell"}
-git config --global user.signingkey ((gpg --list-secret-keys --keyid-format=long "<random_numbers>+<your_github_username>@users.noreply.github.com" | ForEach-Object { $_.ToString() -match '^sec\s+\S+/(\S+)' | Out-Null; $Matches[1] }) | Select-Object -First 1)
+```batch
+gpg --armour --export <numbers+gh_username>@users.noreply.github.com | gh gpg-key add - --title "My Laptop Key"
 ```
+
+For some reason, the above command doesn't work from powershell, only cmd.
 
 ## Cloning Your Repo and Getting on with your Work
 
