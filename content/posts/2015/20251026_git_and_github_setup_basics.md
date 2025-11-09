@@ -68,7 +68,7 @@ git config --global user.name "<Your real name>"
 
 ### user.email
 
-Despite have already set your `user.name`, the `user.email` field is arguably more important to GitHub users, as this is the field that GitHub will actually use to match commit authors to their GitHub profiles. It shouldn't be your personal e-mail though, as we obviously don't want to expose that. GitHub actually provides a special e-mail address for this very purpose, and that's the e-mail address you should configure git with.
+Despite having already set `user.name`, the `user.email` field is arguably more important to GitHub users, as this is the field that GitHub will actually use to match commit authors to their GitHub profiles. It shouldn't be your personal e-mail though, as we obviously don't want to expose that. GitHub actually provides a special e-mail address for this purpose, and that's the e-mail address you should configure git with.
 
 To find your GitHub e-mail address from GitHub.com:
 
@@ -88,7 +88,7 @@ git config --global user.email <numbers+gh_username>@users.noreply.github.com
 
 ### core.autocrlf
 
-Annoyingly, text files on Windows use slightly different end-of-line characters vs Linux/Mac. Linux and Mac use a single LF (Line Feed character, i.e. /n) to mark the end of a line. Windows uses CRLF endings (a Carriage Return character, followed by the Line Feed character, i.e. /r/n). This could cause a lot of changes to show up in the git repo when someone using Windows is editing files, even though the only part of the file changing is the end-of-line characters. To avoid this, by default on Windows, git will autoconvert line endings (i.e. has a default setting for `core.autocrlf` of 'true'). This means that when you checkout files, git will automatically convert the line endings to CRLF. When you commit your changes, git will convert the line endings back to LF. In other words, your local Windows repo will have CRLF, and the GitHub repo will have LF. Which works just fine.
+Annoyingly, text files on Windows use slightly different end-of-line characters vs Linux/Mac. Linux and Mac use a single LF (Line Feed character, i.e. /n) to mark the end of a line. Windows uses CRLF endings (a Carriage Return character, followed by the Line Feed character, i.e. /r/n). This could cause a lot of changes to show up in the git repo when someone using Windows is editing files, even though potentially the only part of the file changing is the end-of-line characters. To avoid this, by default on Windows, git will autoconvert line endings (i.e. has a default setting for `core.autocrlf` of 'true'). This means that when you checkout files, git will automatically convert the line endings to CRLF. When you commit your changes, git will convert the line endings back to LF. In other words, your local Windows repo will have CRLF, and the GitHub repo will have LF. Which works just fine.
 
 However, this doesn't make a lot of sense if you are going to be using a DevContainer for development purposes on Windows (and you should be using one), as you would be converting the files to Windows line endings when checking them out, but then working on them in a Linux environment that doesn't like those line endings. We can configure git to just keep everything LF, and the downsides of this are pretty much non-existent; even on Windows, python doesn't care about line endings, modern editors like VS Code don't care etc etc. On Windows, I therefore recommended setting `core.autocrlf` to 'input', which will continue to convert any CRLFs you commit to LF, but when checking out will leave the line endings as LF. In other words, everything will be LF.
 
@@ -110,7 +110,7 @@ Git Credential Manager is a tool that provides a consistent way for git to use a
 #### Windows
 If you installed Git for Windows, there is a very good chance that Git Credential Manager is already installed. If you want to check, run the following command:
 
-```powershell
+```powershell {filename="PopwerShell"}
 > git credential-manager --version
 2.6.1+786ab03440ddc82e807a97c0e540f5247e44cec6
 ```
@@ -140,7 +140,7 @@ It is also recommended to add a line to `bashrc` that will set the `GPG_TTY` env
 $ grep -qxF 'export GPG_TTY=$(tty)' "$HOME/.bashrc" || echo 'export GPG_TTY=$(tty)' >> "$HOME/.bashrc"
 ```
 
-You will also need initialise `pass` before configuring GCM to use it, and that will require generating a GPG Keypair (instructions [here](#generating-a-gpg-key-pair)). Once you have generated that key pair, initialise pass with it using the following command:
+You will also need initialise `pass` before configuring GCM to use it, and that will require generating a GPG Key Pair (instructions [here](#generating-a-gpg-key-pair)). Once you have generated that key pair, initialise pass with it using the following command:
 
 ```bash {filename="Bash"}
 pass init $(gpg --list-secret-keys --keyid-format=long "<numbers+gh_username>@users.noreply.github.com" 2>/dev/null | awk '/^sec/{split($2,a,"/"); print a[2]}')
@@ -148,7 +148,7 @@ pass init $(gpg --list-secret-keys --keyid-format=long "<numbers+gh_username>@us
 ```
 
 #### Mac
-On MacOS, install `pass` using Homebrew:
+On MacOS, install Git Credential Manager using Homebrew:
 
 ```zsh {filename="zsh"}
 % brew install --cask git-credential-manager
@@ -182,7 +182,7 @@ PS > git config --global credential.credentialStore wincredman
 
 __Setting the Backend on Mac:__
 
-Similarly, on Mac the credential store backend doesn't need to be explicitly set (it will use MacOS Keychain by default), but if you are a belt and braces sortof person, you can explicitly set this with the following command:
+Similarly, on Mac the credential store backend doesn't need to be explicitly set (it will use MacOS Keychain by default), but you can explicitly set it if you want with the following command:
 
 ```zsh {filename="zsh"}
 git config --global credential.credentialStore keychain
@@ -200,6 +200,15 @@ If you don't already have a GitHub PAT, you can generate one from GitHub in your
 
 ### Managing Your Credentials
 
+#### Linux
+
+On linux, you can manage the credentials you have stored in the pass credential store with commands such as `pass ls` to list store credentials, and `pass rm` to remove a specific one:
+
+```bash {filename="Bash"}
+$ pass ls
+$ pass rm service/name
+```
+
 #### Windows
 
 On Windows, if you ever need to manage the GitHub credentials stored in the Windows Credential Store backend, you can use the [cmdkey](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/cmdkey) command with the list argument, and then look for a credential with a 'target' value that looks something like 'LegacyGeneric:target=git:https://github.com':
@@ -213,6 +222,8 @@ If you ever need to delete a credential from the Windows credential store, use t
 ```powershell {filename="PowerShell"}
 PS > cmdkey /delete:LegacyGeneric:target=git:https://github.com
 ```
+
+<!-- ToDo: Managing Credentials on a Mac -->
 
 ## Signing Your Commits
 
@@ -285,7 +296,7 @@ VS Code will use the `-c user.useConfigOnly=true` option when making commits, so
 
 Linux:
 ```bash {filename="Bash"}
-git config --global user.signingkey $(gpg --list-secret-keys --keyid-format=long "<numbers+gh_username>@users.noreply.github.com" 2>/dev/null | awk '/^sec/{split($2,a,"/"); print a[2]; exit}')
+$ git config --global user.signingkey $(gpg --list-secret-keys --keyid-format=long "<numbers+gh_username>@users.noreply.github.com" 2>/dev/null | awk '/^sec/{split($2,a,"/"); print a[2]; exit}')
 ```
 
 Windows:
@@ -293,9 +304,14 @@ Windows:
 PS > git config --global user.signingkey ((gpg --list-secret-keys --keyid-format=long "<numbers+gh_username>@users.noreply.github.com" | ForEach-Object { $_.ToString() -match '^sec\s+\S+/(\S+)' | Out-Null; $Matches[1] }) | Select-Object -First 1)
 ```
 
+Mac:
+```zsh {filename="zsh"}
+% git config --global user.signingkey $(gpg --list-secret-keys --keyid-format=long "<numbers+gh_username>@users.noreply.github.com" 2>/dev/null | awk '/^sec/{split($2,a,"/"); print a[2]; exit}')
+```
+
 ### Configuring GitHub to Verify Your Commits with the Public Key
 
-The easy way to add the public GPG Key to your GitHub profile is use the terminal to copy it to the clipboard, and then paste it into relevant settings page in your web browser. To copy the key to the clipboard:
+The easy way to add the public GPG Key to your GitHub profile is to use the terminal to copy it to the clipboard, and then paste it into relevant settings page in GitHub.com. To copy the key to the clipboard:
 
 __Linux:__
 ```bash {filename="bash"}
@@ -312,7 +328,7 @@ __Mac:__
 % gpg --armor --export "<numbers+gh_username>@users.noreply.github.com" | pbcopy
 ```
 
-Then in GitHub:
+Then in GitHub.com:
 
 1. In the upper-right corner of any page on GitHub, click your profile picture, then click Settings.
 2. In the left hand sidebar, click  SSH and GPG keys.
@@ -382,6 +398,10 @@ For some reason, this command only works from cmd, not powershell.
 > gpg --armour --export <numbers+gh_username>@users.noreply.github.com | gh gpg-key add - --title "My Laptop Key"
 ```
 
+__Mac:__
+```zsh  {filename="zsh"}
+$ gpg --armor --export "<numbers+gh_username>@users.noreply.github.com" | gh gpg-key add - --title "My Laptop Key"
+```
 
 ## Cloning Your Repo and Getting to Work
 
@@ -393,4 +413,4 @@ git clone --branch <branch-name> <https-repo-url>
 
 [^1]: The homebrew package manager is not a built-in component of MacOS, and will need to be installed before using any `brew` commands. Installation instructions can be found at [brew.sh](https://brew.sh/), but basically involves downloading and running an installation script like this: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 [^2]: You shouldn't run shell scripts you find on random blog posts. Always go to the official source, confirm you trust it, and confirm the address of the script before running it.
-[^3]: This is obviously less secure than setting a passphrase, but much more convenient. It's upto you to judge if the location where the GPG Keys are being stored (in this instance, your home directory) is secure enough (i.e. can anyone else access that location). If this is an unacceptable security compromise, you may wish to investigate storing your GPG Keys on a [Yubikey](https://www.yubico.com/)
+[^3]: This is obviously less secure than setting a passphrase, but much more convenient. It's up to you to judge if the location where the GPG Keys are being stored (in this instance, your home directory) is secure enough (i.e. can anyone else access that location). If this is an unacceptable security compromise, you may wish to investigate storing your GPG Keys on a [Yubikey](https://www.yubico.com/)
