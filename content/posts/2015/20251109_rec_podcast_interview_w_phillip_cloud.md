@@ -1,0 +1,29 @@
+---
+title: "Recommended Podcast: Interview with Ibis Dataframe lead maintainer, Phillip Cloud"
+date: 2025-11-09
+tags: ['podcasts', 'ibis', 'dataframes', 'dplyr', 'duckdb']
+---
+
+<iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="175" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.podcasts.apple.com/us/podcast/decoupling-systems-to-get-closer-to-the-data/id1501905538?i=1000652970636"></iframe>
+
+The [Ibis](https://ibis-project.org/) project was originally founded in 2015 by Wes McKinney (the creator of pandas and a co-founder of Voltron Data), as a pandas-like interface to Apache Impala. In 2022, Phillip Cloud and the Ibis team he led at Voltron Data started dramatically expanding the scope of the project, building it into a 'universal python dataframe api', giving a large variety of supported backends a consistent dataframe interface. As of 2025, some notable backends it supports are BigQuery, Snowflake, Databricks, Trino, PostgreSQL, MS SQL, MySQL, and Oracle. It evens supports using the Ibis Dataframe API on top of Pandas and Polars dataframes. The coolest backend it supports is of course DuckDB, and the local combination of Ibis and DuckDB is likely to be very exciting for anyone with a use case that has outgrown pandas, but doesn't quite warrant breaking out a sledgehammer solution.
+
+One of the things that really appeals to me about Ibis is that it's dataframe API is so close to the API of R's dplyr library, which I think is the most intuitive and readable dataframe API. It turns out this is no accident, and the Ibis developers are taking heavy inspiration from the best parts of dplyr:
+
+> Ibis is very inspired by an R library called dplyr, and so we take a lot of the words and verbs and nouns from dplyr like 'mutate' and 'select'. That's quite a divergence from Pandas. We also have 'pivot_wider' and 'pivot_longer' from dplyr, and we have a feature called 'selectors' which is 100% stolen, you know not stolen, I mean it was inspired very heavily by dplyr. When I implemented that I actually ported the test suite from the dplyr selectors tests into python so that I could check 'does this behave in the exact same way in python'. We're definitely going for the piping kind of experience that dplyr has. R has the native pipe operator now, but before they used to just have a greater than sign in between two percent symbols, and in python we already we have the dot operator. So instead of piping we have the dot, and we're definitely going for that fluent design api where you can just chain stuff, and then you build these big chains and it all gets compiled into sql, very heavily inspired by dplyr.
+
+Phillip also talks a bit about Ibis's use of lazy evaulation, which allows the backend database to see the entire transformation chain before executing it, and can therefore apply all of it's optimization techniques (predicate pushdown, different join strategies etc):
+
+> I think traditionally, or at least I've definitely done this in the past, where I just ran a pandas.read_sql() call and gave it a select star statement, then you're pulling however many bytes back to your local machine, and now you're doing the computation with pandas, for better or worse. When we talk about being close to the data, we're talking about the computation occurring on the engine that knows how to do that best and optimize it, so let's take Snowflake for example. Snowflake is the engine that best knows how to operate on Snowflake tables. So pulling a table back from Snowflake and then doing your computation in pandas if it can be expressed in SQL is pretty inefficient, you're gonna pay egress costs for sure, and if new data arrives now you're gonna have to pull that again, and it becomes prohibitive in terms of time, space, and dollars. One of the things main ideas in Ibis is that we're just saying 'hey database, here's the query, take care of it, just give me the results', and so we don't have to pull anything back that we don't need into memory until it's the final result, and even then you have to opt explicitly into doing that by calling a method.
+
+Phillip also alluded to some of the challenges of trying to make sure that code written with Ibis is portable across different backends, which requires delving into many of the details and edge cases about how different backends handle different tasks:
+
+> One of the unique development, let's call it experiences, that one may have when working on Ibis is having to deal with the idiosyncrasies of 20 execution engines, especially around all the fun, but not really that fun, edge cases, you know null handling and floating point rounding. There's a lot of interesting details there, but it can be quite tiring too. At the end, you end up with some knowledge about how 20 different systems work, but you're like where where am I going to use this except for Ibis? If I'm an Ibis developer, it's useful, but hardly anyone I know has 20 unique databases in production.
+
+If you want to follow Phillip Cloud, he can be found on [LinkedIn](https://www.linkedin.com/in/phillip-cloud/), [YouTube](https://www.youtube.com/@cpcloud), and [GitHub](https://github.com/cpcloud).
+
+Link to the Podcast Episode:
+
+{{< cards cols="1" >}}
+  {{< card link="https://realpython.com/podcasts/rpp/201/" title="The Real Python Podcast - Decoupling Systems to Get Closer to the Data" >}}
+{{< /cards >}}
