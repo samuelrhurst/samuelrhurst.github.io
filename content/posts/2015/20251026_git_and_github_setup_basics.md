@@ -86,6 +86,22 @@ To set `user.email` to this address in git, run the following command:
 git config --global user.email <numbers+gh_username>@users.noreply.github.com
 ```
 
+###
+
+When working with git repositories, you might encounter the following [error message](https://code.visualstudio.com/docs/sourcecontrol/faq#_why-is-vs-code-warning-me-that-the-git-repository-is-potentially-unsafe):
+
+{{< figure src="/images/20252610_git_and_github_setup_basics/potentially_unsafe_repo.png" alt="Example" width="315" >}}
+
+According to the VS Code documentation:
+
+> VS Code uses git.exe for executing all Git operations. Starting with Git 2.35.2, users are prevented from running Git operations in a repository that is in a folder that owned by a user other than the current user as the repository is deemed to be potentially unsafe. On Windows, a common scenario where this can occur is when a repository is cloned using an application (for example, Windows Terminal or VS Code) that runs "as administrator", but the repository is opened using another application or instance (for example, VS Code) that does not run "as administrator".
+
+The simple fix is to just turn this behaviour off in Git (by marking every repo as safe):
+
+```bash
+git config --global safe.directory *
+```
+
 ### core.autocrlf
 
 Annoyingly, text files on Windows use slightly different end-of-line characters vs Linux/Mac. Linux and Mac use a single LF (Line Feed character, i.e. /n) to mark the end of a line. Windows uses CRLF endings (a Carriage Return character, followed by the Line Feed character, i.e. /r/n). This could cause a lot of changes to show up in the git repo when someone using Windows is editing files, even though potentially the only part of the file changing is the end-of-line characters. To avoid this, by default on Windows, git will autoconvert line endings (i.e. has a default setting for `core.autocrlf` of 'true'). This means that when you checkout files, git will automatically convert the line endings to CRLF. When you commit your changes, git will convert the line endings back to LF. In other words, your local Windows repo will have CRLF, and the GitHub repo will have LF. Which works just fine.

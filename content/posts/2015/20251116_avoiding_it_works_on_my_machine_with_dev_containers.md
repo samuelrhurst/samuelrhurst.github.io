@@ -1,19 +1,19 @@
 ---
 title: "Avoiding 'It Works on My Machine' with DevContainers"
-date: 2025-11-07
+date: 2025-11-16
 draft: true
 tags: ['howto', 'vscode', 'devcontainers', 'docker']
 ---
 
-Data professionals often get stung by the _'but it works on my machine'_ issue twice; first when a colleague is trying to run your work and running into issues, and then again when you return to your own work 6mths later. Being able to recreate the exact specific environment for each project is the key to solving this issue, and Microsoft's [DevContainers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension for VS Code is one of the most popular ways to do this (over 34 million installs!)
+Data professionals often get stung by _'it works on my machine'_ issues twice; first when a colleague is trying to run your code and running into issues, and then again when you return to your own work 6mths later. Being able to recreate the exact specific environment for each project is the key to solving this issue, and Microsoft's [DevContainers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension for VS Code is one of the most popular ways to do this (over 34 million installs!)
 
 ## Containerised Environments
 
-Containers are a core technology of modern cloud environments, and have become very popular as a way to distribute any software that has very specific configuration and dependency requirements. They're also useful for creating isolated development environments. You might already be in the habit of pinning your Python environment for each different project you work on, generating a requirements.txt or uv.lock file and working from a python virtual environment. That's a good start, but it won't lock down many other aspects of the environment, such as which distro you are using, what system packages are installed, environment variables etc etc.
+Containers are a core technology of modern cloud environments, and have become very popular as a way to distribute any software that has very specific configuration and dependency requirements. They're also fantastic for creating isolated development environments. You might already be in the habit of pinning your Python environment for each different project you work on, generating a requirements.txt or uv.lock file and working from a python virtual environment. That's a good start, but it won't lock down many other aspects of the environment, such as which distro you are using, what system packages are installed, environment variables etc etc.
 
-What is needed is a way for users to be able to specify their required dev environment for their project, and tooling that allows anyone with those specs to easily create that environment. Microsoft has created an open [Development Containers Specification](https://containers.dev/), that defines a way to write a `devcontainer.json` file to specify your environment. Microsoft has then also released a [VSCode Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) that will handle the work of creating the dev environment for a project that happens to include one of these `devcontainer.json` files.
+What is needed is a way to document the ENTIRE development environment, in a way that makes it easy for other users to re-create. Microsoft has created a [Development Containers Specification](https://containers.dev/) that defines how to write a `devcontainer.json` file. These `devcontainer.json` files will contain all the details of the dev environment. Microsoft has also released a [Dev Containers VSCode Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) that can create a dev environment based on a `devcontainer.json` file. The extension makes it so quick and easy to create a devcontainer environment when opening a project, there's no real excuse not to use it!
 
-## The devcontainer.json File
+## devcontainer.json
 
 __To-Do: Explain the devcontainer.json file a bit.__
 
@@ -71,23 +71,54 @@ Instead of specifying an `image` option, you can specify a `build` option if you
 
 __To-Do: Explain the extension.__
 
+### Where are things running?
+
+In the context of DevContainer or remote environments, VS Code categorises extensions as follows:
+
+* UI Extensions: These extensions are focused on the VS Code user interface, and run on the user's local machine, not in the development environment. Examples include themes, keymaps, and language grammars.
+* Workspace Extensions: These extensions will run in the development environment.
+
+When you are up and running with your Dev Container using VS Code, you don't necessarily need to know which is which, as when you install the extension, VS Code will install it into the correct location.
+https://code.visualstudio.com/api/advanced-topics/remote-extensions#architecture-and-extension-kinds
+
+Even if your local setup of VS Code has all your favourite extensions already installed, a lot of those extensions won't be available once you open your project in a Dev Container unless you a) reinstall those extensions again, this time in the Dev Container, or b) add those extensions to your projects devcontainer.json file. Here are some common extensions you might want to add to your devcontainer.json file:
+
+* [Microsoft's Official Jupyter Extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter) (ms-toolsai.jupyter)
+
 ## Setup Instruction
 
 ### VS Code
 
-If you haven't already, you will need to install the [DevContainers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension into VS Code. You can do this through the Extensions sidebar panel, or by running the following command:
+If you haven't already, you will need to install the [Dev Containers VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). You can do this through the Extensions sidebar panel, or by running the following command:
 
-```bash
-code --install-extension ms-vscode-remote.remote-containers
+```bash {filename="Bash"}
+$ code --install-extension ms-vscode-remote.remote-containers
 Installing extensions...
 Installing extension 'ms-vscode-remote.remote-containers'...
 Extension 'ms-vscode-remote.remote-containers' v0.309.0 was successfully installed.
 ```
 
+While not strictly required, the [Remote Explorer VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.remote-explorer) is highly recommended. It will allow you view and manage devcontainers.
 
-ms-vscode.remote-explorer?
+```bash {filename="Bash"}
+$ code --install-extension ms-vscode.remote-explorer
+Installing extensions...
+Installing extension 'ms-vscode.remote-explorer'...
+Extension 'ms-vscode.remote-explorer' v0.5.0 was successfully installed.
+```
 
-### Linux
+If you think you are going to want to write your own custom Docker files to use with your devcontainer.json, you will likely find it helpful to install Microsoft's [Container Tools VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-containers) while you are at it:
+
+```bash {filename="Bash"}
+$ code --install-extension ms-azuretools.vscode-containers
+Installing extensions...
+Installing extension 'ms-azuretools.vscode-containers'...
+Extension 'ms-azuretools.vscode-containers' v2.3.0 was successfully installed.
+```
+
+### Docker
+
+#### Linux
 
 You should check the official [docker documentation](https://docs.docker.com/engine/install/) for installation instructions for your specific distro, but in general the docker installation process is similar for all the different package managers.
 
@@ -101,7 +132,7 @@ RHEL / Fedora:
 sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-### Windows
+#### Windows
 
 Technically, containers for operating systems other than Linux do exist, but in the context of data professionals, a container = a Linux Docker container. Containers share the operating system kernel with the system they are running on, but for a Windows laptop, this presents an issue; the system kernel is a Windows kernel, not the required Linux kernel. The only way around this is to somehow get a Linux kernel up and running, and we do this by running a Linux Virtual Machine using [WSL2](https://learn.microsoft.com/en-us/windows/wsl/) (aka Windows Subsystem for Linux). This VM is where the Docker Engine that DevContainers extension will interact with.
 
@@ -161,25 +192,25 @@ docker-desktop (Default)
 
 Something to be aware of, is that Docker Desktop is only licenced for free use for personal/educational use, and for use by small businesses (fewer than 250 employees AND less than $10 million in annual revenue). If you are working for a large corporation, you might need to get them to cough up for licence, or alternatively, try to use [Podman](podman.io) as a drop in replacement for Docker.
 
-### Mac
+#### Mac
 
 __To-Do: More details about Mac.__
 
 Install docker with the following command [^1]:
 
-```bash
-brew install --cask docker
+```zsh {filename="zsh"}
+% brew install --cask docker
 ```
 
 ## Working on Your Project in a Dev Container
 
-After opening your project folder in VS Code, as long as there is a valid `devcontainer.json` file the project folder, you can launch your DevContainer with the `Dev Containers: Reopen in Container` command. VS Code will buzz away for a moment or so, and then it will reopen. The first thing you might notice is that the blue icon remote/container context icon in the bottom left hand corner of VS Code will now show that you are working in a Dev Container:
+After opening your project folder in VS Code, as long as there is a valid `devcontainer.json` file the project folder, you can launch your DevContainer with the `Dev Containers: Reopen in Container` command. VS Code will buzz away for a moment or so, and then reopen, now running in a dev container. The first thing you might notice is that the blue icon remote/container context icon in the bottom left hand corner of VS Code will now show that you are working in a Dev Container:
 
 {{< figure src="/images/20251107_avoiding_it_works_on_my_machine_with_dev_containers/dev_container_status.png" alt="Example" width="400" >}}
 
-In VS Code, you can now open a terminal and run a few commands to verify your new dev environment:
+If you want to verify the details of your new devcontainer environment, in VS Code you can open a terminal and run any of the following commands:
 
-```bash
+```bash {filename="Bash"}
 vscode ➜ /workspaces/my-proj $ python --version
 Python 3.14.0
 
